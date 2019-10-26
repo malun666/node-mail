@@ -1,28 +1,37 @@
-const nodeMailer = require("nodemailer");
-let transporter  = nodeMailer.createTransport();
- 
-let defaultOptions = {
-    from:'"bd"<bd@aicoder.com>',
-    to:"malun666@126.com",
-    subject:"Hello",
-    text:"Hello world text",
-    // html:"<b>Hello world</b>"
-    //If you use the html, html will overwrite the text;
-    attachments:[    ]
-//附件
-}
-mailer.send = (defaultOptions)=>{
-    // return new Promise((resolve,reject) =>{
-    let code = validation.generateCode();
-    defaultOptions.text =  defaultOptions.text+" validation is "+code;
-        transporter.sendMail(defaultOptions,(err,info)=>{
-            if(err){
-                 console.log(err)
-            }
-            else {
-                console.log(err,info)
-            }
-        });
-    return;
-}
-mailer.send(defaultOptions);
+const nodeMailer = require('nodemailer');
+
+// Generate test SMTP service account from ethereal.email
+// Only needed if you don't have a real mail account for testing
+
+// create reusable transporter object using the default SMTP transport
+(async () => {
+  // let testAccount = await nodemailer.createTestAccount();
+  let transporter = nodeMailer.createTransport({
+    // host: 'smtp.126.com',
+    // host: 'smtp.qiye.163.com',
+    // port: 994, // 578
+    service: '"qiye.aliyun"',
+    secureConnection: true,
+    secure: true, // true for 465, false for other ports
+    auth: {
+      user: 'bd@aicoder.com', // generated ethereal user
+      pass: 'ssfsdfdsfds!' // generated ethereal password
+    }
+  });
+
+  try {
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+      // from: '"Fred Foo 👻" <foo@example.com>', // sender address
+      // to: 'bar@example.com, baz@example.com', // list of receivers
+      // from: '"bd"<bd@aicoder.com>',from: '马伦 <malun666@126.com>',
+      from: '马伦 <bd@aicoder.com>',
+      to: 'malun666@126.com',
+      subject: 'Hello ✔', // Subject line
+      text: 'Hello world text',
+    });
+    console.log('Message sent: %s', info.messageId);
+  } catch (e) {
+    console.log(e);
+  }
+})();
